@@ -1,5 +1,5 @@
 # TexTools-Organizer
-Automatic organization of texture files output from FFXIV TexTools when exporting a "full model"
+Automatic organization of texture files output from [FFXIV TexTools](https://www.ffxiv-textools.net) when exporting a "full model"
 
 Grab a release from [here](https://github.com/wolfinabox/TexTools-Organizer/releases/latest)!
 
