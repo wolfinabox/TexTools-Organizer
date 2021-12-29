@@ -1,4 +1,10 @@
 # Byte-compiled / optimized / DLL files
+*.exe
+*.lnk
+#nuitka dirs
+*.build
+*.dist
+*.onefile-build
 __pycache__/
 *.py[cod]
 *$py.class
