@@ -16,7 +16,7 @@
             "name": "Python: Current Project",
             "type": "python",
             "request": "launch",
-            "program": "${workspaceFolder}/src/main.py",
+            "program": "${workspaceFolder}/src/textools_organizer.py",
             "args": ["C:\\Users\\wolfinabox\\Documents\\FFXIV Char Export\\Velus Attempt 2\\assets","-vv"],
             "console": "integratedTerminal",
             "env": {"PYTHONPATH":"${workspaceFolder}"}

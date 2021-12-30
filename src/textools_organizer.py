@@ -2,7 +2,8 @@ import argparse
 import logging
 import sys, os
 import shutil
-import colorama 
+import colorama
+
 colorama.init()
 import daiquiri, daiquiri.formatter
 from utils import askYN, exit_wait
@@ -25,6 +26,7 @@ PART_TYPES = {
     "hir_a": "hair",
     "acc_b": "hairacc",  # from hair
     "t0001_a": "tail",  # from tail
+    "z0001_a":"ears",
     # TODO need ears
     # armor
     "top_a": "chest",
@@ -32,6 +34,14 @@ PART_TYPES = {
     "glv_a": "gloves",
     "met_a": "helmet",
     "dwn_a": "legs",
+    # TODO "full-set" armors? they have the same ending ids
+    # weapons
+    # Not supported by FMV (full model viewer) anyway so meh
+    # "b0015_a":"mainhand",
+    # "b0034_a":"offhand",
+    # "b0004_a":"dualwield_mainhand",
+    # "b0002_a":"dualwield_offhand",
+    # "b0031_a":"twohanded_wep"
 }
 
 parser = argparse.ArgumentParser(
@@ -57,7 +67,7 @@ parser.add_argument(
     dest="move",
     action="store_true",
     default=False,
-    help="Move files when reorganizing, instead of copy",
+    help="Move files when reorganizing, instead of copy. (This WILL break texture mapping on the original .fbx)",
 )
 parser.add_argument(
     "-y",

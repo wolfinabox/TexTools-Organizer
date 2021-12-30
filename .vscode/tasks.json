@@ -6,7 +6,7 @@
         {
             "label": "Nuitka Win build",
             "type": "shell",
-            "command": "${workspaceFolder}\\env\\scripts\\python -m nuitka --onefile ${workspaceFolder}/src/main.py",
+            "command": "${workspaceFolder}\\env\\scripts\\python -m nuitka --onefile ${workspaceFolder}/src/textools_organizer.py",
             "problemMatcher": [],
             "group": {
                 "kind": "build",
