@@ -10,14 +10,13 @@
             "request": "launch",
             "program": "${file}",
             "console": "integratedTerminal",
-            "args": ["C:\\Users\\wolfinabox\\Documents\\FFXIV Char Export\\Velus Attempt 2\\assets","-vv"]
         },
         {
             "name": "Python: Current Project",
             "type": "python",
             "request": "launch",
             "program": "${workspaceFolder}/src/textools_organizer.py",
-            "args": ["C:\\Users\\wolfinabox\\Documents\\FFXIV Char Export\\Velus Attempt 2\\assets","-vv"],
+            "args": ["${workspaceFolder}\\Testing\\velus_v2","-vv","-y"],
             "console": "integratedTerminal",
             "env": {"PYTHONPATH":"${workspaceFolder}"}
         }

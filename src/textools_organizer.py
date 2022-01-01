@@ -4,56 +4,23 @@ import sys, os
 import shutil
 import colorama
 
+
 colorama.init()
 import daiquiri, daiquiri.formatter
 from utils import askYN, exit_wait
+from name_parser import parse_filename
 
-# consts
-IMAGE_TYPES = {
-    "d": "albedo",
-    "e": "color",
-    "n": "normal",
-    "o": "occlusion",
-    "s": "specular",
-}
-PART_TYPES = {
-    # character
-    "b0001_a": "body",  # from body
-    "fac_a": "face",
-    "etc_a": "faceacc",
-    "etc_b": "eye",
-    "iri_a": "iris",  # from face
-    "hir_a": "hair",
-    "acc_b": "hairacc",  # from hair
-    "t0001_a": "tail",  # from tail
-    "z0001_a":"ears",
-    # TODO need ears
-    # armor
-    "top_a": "chest",
-    "sho_a": "boots",
-    "glv_a": "gloves",
-    "met_a": "helmet",
-    "dwn_a": "legs",
-    # TODO "full-set" armors? they have the same ending ids
-    # weapons
-    # Not supported by FMV (full model viewer) anyway so meh
-    # "b0015_a":"mainhand",
-    # "b0034_a":"offhand",
-    # "b0004_a":"dualwield_mainhand",
-    # "b0002_a":"dualwield_offhand",
-    # "b0031_a":"twohanded_wep"
-}
 
-parser = argparse.ArgumentParser(
+argparser = argparse.ArgumentParser(
     description="Organize the texture outputs from FFXIV TexTools into a more usable format."
 )
-parser.add_argument(
+argparser.add_argument(
     "path",
     type=str,
     nargs="?",
     help="Path to the folder containing exported images and .fbx file from TexTools",
 )
-parser.add_argument(
+argparser.add_argument(
     "-k",
     "--keepnames",
     dest="keepnames",
@@ -61,7 +28,7 @@ parser.add_argument(
     default=False,
     help="Don't rename files after reorganizing",
 )
-parser.add_argument(
+argparser.add_argument(
     "-m",
     "--move",
     dest="move",
@@ -69,14 +36,14 @@ parser.add_argument(
     default=False,
     help="Move files when reorganizing, instead of copy. (This WILL break texture mapping on the original .fbx)",
 )
-parser.add_argument(
+argparser.add_argument(
     "-y",
     dest="yes",
     action="store_true",
     default=False,
     help="Answer yes to all prompts (may delete old processed files if necessary)",
 )
-parser.add_argument(
+argparser.add_argument(
     "-v",
     "--verbose",
     dest="verbose",
@@ -84,7 +51,7 @@ parser.add_argument(
     default=0,
     help="Logging verbosity. Available: -v, -vv",
 )
-parser.add_argument(
+argparser.add_argument(
     "-s",
     "--subfolder",
     type=str,
@@ -96,7 +63,7 @@ parser.add_argument(
 if __name__ == "__main__":
     # args
     sys.argv.pop(0)
-    args = parser.parse_args(sys.argv)
+    args = argparser.parse_args(sys.argv)
     daiquiri.setup(
         level={0: logging.WARN, 1: logging.INFO, 2: logging.DEBUG}.get(
             args.verbose, logging.DEBUG
@@ -162,33 +129,17 @@ if __name__ == "__main__":
                 )
             continue
         log.debug(f'Processing "{file}"...')
-        try:
-            # parse name
-            _, first = os.path.splitext(file.lower())[0].split("_", 1)
-            im_type = first[-1]
-            first = first[:-2]
-            # get image type and part type from known
-        except:
+        # parse filename
+        part_type, part_subtype, image_type = parse_filename(file.lower())
+        if None in (part_type, part_subtype, image_type):
             log.warning(f'Unknown file "{file}", ignoring...')
             continue
-
-        # get part type and image type
-        image_type = IMAGE_TYPES.get(im_type)
-        part_type = None
-        # validate
-        for part in PART_TYPES.keys():
-            if first.endswith(part):
-                part_type = PART_TYPES[part]
-                break
-        if image_type is None or part_type is None:
-            log.warn(f'Unknown file "{file}", ignoring...')
-            continue
-        log.debug(f"Part: {part_type.title()}, Image: {image_type.title()}")
-
+        log.debug(f"Part: {(part_type+f' {part_subtype}' if part_subtype!='1' else part_type).title()}, Image: {image_type.title()}")
+        # file writing
         out_file_name = (
             file
             if args.keepnames
-            else f"{part_type}_{image_type}{os.path.splitext(file)[1]}"
+            else f"{(part_type+f'_{part_subtype}' if part_subtype!='1' else part_type)}_{image_type}{os.path.splitext(file)[1]}"
         )
 
         part_out_dir = os.path.join(out_folder, part_type)
